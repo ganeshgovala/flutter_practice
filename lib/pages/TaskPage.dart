@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_practice/components/TaskPageSlide.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({super.key});
+  final String taskName;
+  const TaskPage({
+    required this.taskName,
+    super.key
+  });
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -14,7 +18,10 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          Icon(Icons.more_vert_outlined),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Icon(Icons.more_vert_outlined),
+          ),
         ],
       ),
       body: Padding(
@@ -28,18 +35,24 @@ class _TaskPageState extends State<TaskPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Dinner", style: TextStyle(
+                  Text(widget.taskName, style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
                   ),),
-                  Row(children: [
-                    Icon(Icons.add, color: Colors.orange[400]),
-                    Text("Add Sub-task", style: TextStyle(
-                      color: Colors.orange[400],
-                      fontSize: 20,
-                    ),)
-                  ],)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom : 10.0),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Row(children: [
+                        Icon(Icons.add, color: Colors.orange[400]),
+                        Text("Add Sub-task", style: TextStyle(
+                          color: Colors.orange[400],
+                          fontSize: 20,
+                        ),)
+                      ],),
+                    ),
+                  )
                 ],
               ),
             ),

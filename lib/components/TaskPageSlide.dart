@@ -22,7 +22,7 @@ class TaskPageSlide extends StatelessWidget {
           icon,
           SizedBox(width: 8),
           Text(title, style: TextStyle(
-            fontSize: 18,
+            fontSize: 16,
             color: const Color.fromARGB(255, 36, 36, 36),
           )),
         ],),

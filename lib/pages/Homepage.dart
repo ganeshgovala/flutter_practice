@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(taskName: data.docs[index]['task'].toString()[0].toUpperCase() + data.docs[index]['task'].toString().substring(1, data.docs[index]['task'].toString().length,))));
                           },
                           child: ListTile(
                             contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
