@@ -25,6 +25,7 @@ class _BottomNavState extends State<BottomNav> {
     return user.add(
       {
         'task' : '${widget._taskController.text}',
+        'desc' : null,
       }
     )
     .then((value) => print(value))
