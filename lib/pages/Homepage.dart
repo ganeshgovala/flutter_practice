@@ -86,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(
-                              taskName: data.docs[index]['task'].toString()[0].toUpperCase() + data.docs[index]['task'].toString().substring(1, data.docs[index]['task'].toString().length,),
-                              id: data.docs[index].id,
+                              name : data.docs[index]['task'].toString(),
+                              id : data.docs[index].id,  
                             )));
                           },
                           child: ListTile(
@@ -117,3 +117,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+// Divider(),
+// TaskPageSlide(icon: Icon(Icons.calendar_month_outlined, size: 18), title: "Due Date", containerText: "17/09/2024",),
+// Divider(),
+// TaskPageSlide(icon: Icon(Icons.alarm_outlined, size: 18), title: "Time & Reminder", containerText: "No",),
+// Divider(),
+// TaskPageSlide(containerText: "No", title: "Repeat Task", icon: Icon(Icons.repeat_outlined, size: 18)),
+// Divider(),
+// TaskPageSlide(containerText: "ADD", title: "Notes", icon: Icon(Icons.note_outlined, size: 18)),
+// Divider(),
+// TaskPageSlide(containerText: "ADD", title: "Attachment", icon: Icon(Icons.attachment, size: 18)),
