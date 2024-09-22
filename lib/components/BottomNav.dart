@@ -18,7 +18,7 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
 
-  TimeOfDay ? _selectedTime;
+  TimeOfDay ? selectedTime;
 
   Future<void> addTask() async {
     CollectionReference user = FirebaseFirestore.instance.collection('tasks');
@@ -26,6 +26,7 @@ class _BottomNavState extends State<BottomNav> {
       {
         'task' : '${widget._taskController.text}',
         'desc' : null,
+        'time' : "12-07-2024",
       }
     )
     .then((value) => print(value))
@@ -34,15 +35,16 @@ class _BottomNavState extends State<BottomNav> {
     });
   }
 
-  Future<void> selectTime() async {
+  Future<void> _selectedTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context, 
       initialTime: TimeOfDay.now(),
     );
 
-    if(picked != null && picked != _selectedTime) {
+    if(picked != null && picked != selectedTime) {
+      print("picked");
       setState(() {
-        _selectedTime = picked;
+        selectedTime = picked;
       });
     }
   }
@@ -61,20 +63,11 @@ class _BottomNavState extends State<BottomNav> {
           actions: [
             IconButton(
               onPressed: () {
-                showDatePicker(
-                  context: context, 
-                  firstDate: DateTime(2024), 
-                  lastDate: DateTime(2025),
-                );
+                _selectedTime(context);
               },
-              icon: Icon(Icons.calendar_today_rounded)
-            ),
-            Text("-"),
-            IconButton(
-              onPressed: () {
-                selectTime();
-              },
-              icon: Icon(Icons.alarm),
+              icon: selectedTime == null 
+                    ? Icon(Icons.alarm)
+                    : Text(selectedTime!.format(context)),
             ),
             SizedBox(width: 50),
             TextButton(
