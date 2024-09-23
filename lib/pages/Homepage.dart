@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_practice/Models/DataModel.dart';
 import 'package:flutter_practice/pages/TaskPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,11 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  Future<void> deleteTask(String id) {
-    return FirebaseFirestore.instance.collection('tasks').doc(id).delete();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +69,6 @@ class _HomePageState extends State<HomePage> {
                       )),
                     );
                   }
-
                   return ListView.builder(
                     itemCount: data.size,
                     itemBuilder: (context, index) {
@@ -86,20 +81,20 @@ class _HomePageState extends State<HomePage> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(
-                              name : data.docs[index]['task'].toString(),
+                              name : data.docs[index]['taskName'].toString(),
                               id : data.docs[index].id,  
                             )));
                           },
                           child: ListTile(
                             contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                            title: Text(data.docs[index]['task'].toString()[0].toUpperCase() + data.docs[index]['task'].toString().substring(1, data.docs[index]['task'].toString().length),
+                            title: Text(data.docs[index]['taskName'].toString()[0].toUpperCase() + data.docs[index]['taskName'].toString().substring(1, data.docs[index]['taskName'].toString().length),
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),),
                             trailing: IconButton(
                               onPressed: () {
-                                deleteTask(data.docs[index].id);
+                                Datamodel().deleteTask(data.docs[index].id);
                               }, 
                               icon: Icon(Icons.delete_outlined)
                             ),
@@ -117,15 +112,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-// Divider(),
-// TaskPageSlide(icon: Icon(Icons.calendar_month_outlined, size: 18), title: "Due Date", containerText: "17/09/2024",),
-// Divider(),
-// TaskPageSlide(icon: Icon(Icons.alarm_outlined, size: 18), title: "Time & Reminder", containerText: "No",),
-// Divider(),
-// TaskPageSlide(containerText: "No", title: "Repeat Task", icon: Icon(Icons.repeat_outlined, size: 18)),
-// Divider(),
-// TaskPageSlide(containerText: "ADD", title: "Notes", icon: Icon(Icons.note_outlined, size: 18)),
-// Divider(),
-// TaskPageSlide(containerText: "ADD", title: "Attachment", icon: Icon(Icons.attachment, size: 18)),

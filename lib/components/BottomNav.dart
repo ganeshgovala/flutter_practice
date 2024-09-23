@@ -3,14 +3,17 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_practice/Models/DataModel.dart';
 import 'package:flutter_practice/pages/DashboardPage.dart';
 import 'package:flutter_practice/pages/Homepage.dart';
 import 'package:flutter_practice/pages/ProfilePage.dart';
 import 'package:flutter_practice/pages/SettingsPage.dart';
 
 class BottomNav extends StatefulWidget {
-    TextEditingController _taskController = TextEditingController();
-  BottomNav({super.key});
+  TextEditingController _taskController = TextEditingController();
+  BottomNav({
+    super.key
+  });
 
   @override
   State<BottomNav> createState() => _BottomNavState();
@@ -19,22 +22,6 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
 
   TimeOfDay ? selectedTime;
-
-  Future<void> addTask() async {
-    CollectionReference user = FirebaseFirestore.instance.collection('tasks');
-    return user.add(
-      {
-        'task' : '${widget._taskController.text}',
-        'desc' : null,
-        'time' : "12-07-2024",
-      }
-    )
-    .then((value) => print(value))
-    .catchError((err) {
-      print(err);
-    });
-  }
-
   Future<void> _selectedTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context, 
@@ -73,7 +60,7 @@ class _BottomNavState extends State<BottomNav> {
             TextButton(
               onPressed: () {
                 if(widget._taskController.text.isNotEmpty) {
-                   addTask();
+                   Datamodel().addData(widget._taskController.text, null, null);
                    widget._taskController.text = "";
                 }
                 Navigator.pop(context);

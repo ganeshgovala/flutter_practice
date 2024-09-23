@@ -1,8 +1,9 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, must_be_immutable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_practice/Models/DataModel.dart';
 import 'package:flutter_practice/components/TaskPageSlide.dart';
 
 class TaskPage extends StatefulWidget {
@@ -25,23 +26,6 @@ class _TaskPageState extends State<TaskPage> {
     DocumentSnapshot data =  await FirebaseFirestore.instance.collection('tasks').doc(id).get();
     return data;
   }
-
-  Future<void> addDesc(String id) async {
-    DocumentReference data = await FirebaseFirestore.instance.collection('tasks').doc(id);
-    try{
-      print(id);
-      await data.update(
-      {
-        'desc' : widget._descController.text,
-      }
-      );
-      print("Data added successfully");
-      setState((){});
-    }
-    catch(e) {
-      print(e);
-    }
-  } 
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +57,13 @@ class _TaskPageState extends State<TaskPage> {
                   }
 
                   final data = snapshot.data;
-                  if(data != null && data.get('desc') != null) {
+                  if(data != null && data.get('description') != null) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width / 1.35,
-                          child: Text(data.get('desc'))
+                          child: Text(data.get('description'))
                         ),
                         IconButton(
                           onPressed: () {
@@ -92,10 +76,11 @@ class _TaskPageState extends State<TaskPage> {
                                 ),
                               ),
                               actions: [
-                                TextButton(onPressed: () {
+                                TextButton(onPressed: () async {
                                   print("Pressed");
-                                  addDesc(widget.id);
                                   Navigator.pop(context);
+                                  await Datamodel().addDescription(widget.id, widget._descController.text);
+                                  widget._descController.text = "";
                                 }, child: Text("Add"))
                               ],
                             ));
@@ -117,9 +102,9 @@ class _TaskPageState extends State<TaskPage> {
                           ),
                         ),
                         actions: [
-                          TextButton(onPressed: () {
+                          TextButton(onPressed: () async {
                             print("Pressed");
-                            addDesc(widget.id);
+                            await Datamodel().addDescription(widget.id, widget._descController.text);
                             Navigator.pop(context);
                           }, child: Text("Add"))
                         ],
@@ -135,18 +120,26 @@ class _TaskPageState extends State<TaskPage> {
               ),
             ],)
           ),
-          Divider(),
-          TaskPageSlide(icon: Icon(Icons.calendar_month_outlined, size: 18), title: "Due Date", containerText: "17/09/2024",),
-          Divider(),
-          TaskPageSlide(icon: Icon(Icons.alarm_outlined, size: 18), title: "Time & Reminder", containerText: "No",),
-          Divider(),
-          TaskPageSlide(containerText: "No", title: "Repeat Task", icon: Icon(Icons.repeat_outlined, size: 18)),
-          Divider(),
-          TaskPageSlide(containerText: "ADD", title: "Notes", icon: Icon(Icons.note_outlined, size: 18)),
-          Divider(),
-          TaskPageSlide(containerText: "ADD", title: "Attachment", icon: Icon(Icons.attachment, size: 18)),
+          ExtraFeautures(),
         ],),
       )
+    );
+  }
+
+  Widget ExtraFeautures() {
+    return Column(
+      children: [
+        Divider(),
+        TaskPageSlide(icon: Icon(Icons.calendar_month_outlined, size: 18), title: "Due Date", containerText: "17/09/2024",),
+        Divider(),
+        TaskPageSlide(icon: Icon(Icons.alarm_outlined, size: 18), title: "Time & Reminder", containerText: "No",),
+        Divider(),
+        TaskPageSlide(containerText: "No", title: "Repeat Task", icon: Icon(Icons.repeat_outlined, size: 18)),
+        Divider(),
+        TaskPageSlide(containerText: "ADD", title: "Notes", icon: Icon(Icons.note_outlined, size: 18)),
+        Divider(),
+        TaskPageSlide(containerText: "ADD", title: "Attachment", icon: Icon(Icons.attachment, size: 18)),
+      ]
     );
   }
 }
