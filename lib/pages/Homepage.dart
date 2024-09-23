@@ -1,5 +1,7 @@
 // ignore_for_file: unused_field, unused_import, must_be_immutable
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,11 @@ class HomePage extends StatefulWidget {
 
   Stream<QuerySnapshot> getTasks() {
     return FirebaseFirestore.instance.collection('tasks').snapshots();
+  }
+
+  Future<DocumentSnapshot> getDate(String id) async {
+    DocumentSnapshot data = await FirebaseFirestore.instance.collection('tasks').doc(id).get();
+    return data;
   }
 
   @override
@@ -54,7 +61,7 @@ class _HomePageState extends State<HomePage> {
 
                   if(snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator(
-                      color: Colors.orange.shade400,  
+                      color: const Color.fromARGB(224, 255, 59, 24),  
                     ));
                   }
 
@@ -62,11 +69,18 @@ class _HomePageState extends State<HomePage> {
 
                   if(data.size == 0) {
                     return Center(
-                      child: Text("No tasks to show", style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      )),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('lib/images/NoTask.png', height: 250,),
+                          SizedBox(height: 20),
+                          Text("No tasks to show", style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          )),
+                        ],
+                      ),
                     );
                   }
                   return ListView.builder(
@@ -76,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          color: const Color.fromARGB(255, 255, 245, 230),
+                          color: const Color.fromARGB(223, 255, 229, 224),
                         ),
                         child: GestureDetector(
                           onTap: () {

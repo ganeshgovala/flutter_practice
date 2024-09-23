@@ -21,17 +21,17 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
 
-  TimeOfDay ? selectedTime;
-  Future<void> _selectedTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+  TimeOfDay? _selectedTime;
+
+  Future<void> selectTime(BuildContext context) async {
+    TimeOfDay? picked = await showTimePicker(
       context: context, 
       initialTime: TimeOfDay.now(),
     );
 
-    if(picked != null && picked != selectedTime) {
-      print("picked");
+    if(picked != null && picked != _selectedTime) {
       setState(() {
-        selectedTime = picked;
+        _selectedTime = picked;
       });
     }
   }
@@ -40,38 +40,53 @@ class _BottomNavState extends State<BottomNav> {
     showDialog(
       context: context,
       builder: ((context) {
-        return AlertDialog(
-          content: TextField(
-            controller: widget._taskController,
-            decoration: InputDecoration(
-              hintText: "Enter Your Task here",
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                _selectedTime(context);
-              },
-              icon: selectedTime == null 
-                    ? Icon(Icons.alarm)
-                    : Text(selectedTime!.format(context)),
-            ),
-            SizedBox(width: 50),
-            TextButton(
-              onPressed: () {
-                if(widget._taskController.text.isNotEmpty) {
-                   Datamodel().addData(widget._taskController.text, null, null);
-                   widget._taskController.text = "";
-                }
-                Navigator.pop(context);
-              }, 
-              child: Text("Add"),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.orange[500],
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+            content: TextField(
+              controller: widget._taskController,
+              decoration: InputDecoration(
+                hintText: "Enter Your Task here",
               ),
-            )
-          ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                _selectedTime == null
+                ? IconButton(
+                  onPressed: () async {
+                    await selectTime(context);
+                    setState(() {});
+                  },
+                  icon : Icon(Icons.alarm),
+                ) 
+                : Text(_selectedTime!.format(context), style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),),
+                SizedBox(width: 50),
+                TextButton(
+                  onPressed: () {
+                    if(widget._taskController.text.isNotEmpty) {
+                      Datamodel().addData(widget._taskController.text, null,
+                      _selectedTime != null 
+                      ? _selectedTime!.format(context).toString()
+                      : null, Timestamp.now());
+                      widget._taskController.text = "";
+                    }
+                    Navigator.pop(context);
+                  }, 
+                  child: Text("Add"),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(224, 255, 59, 24),
+                  ),
+                ),
+              ],),
+            ],
+            );
+          }
         );
       }) 
     );
@@ -101,10 +116,11 @@ class _BottomNavState extends State<BottomNav> {
         borderRadius: BorderRadius.circular(40),
         child: FloatingActionButton(
             onPressed: () {
+              _selectedTime = null;
               inputTask();
             },
             child: Icon(Icons.add, color: Colors.white, size: 28),
-            backgroundColor: Colors.orange.shade400,
+            backgroundColor: const Color.fromARGB(224, 255, 59, 24),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -116,7 +132,7 @@ class _BottomNavState extends State<BottomNav> {
           leftCornerRadius: 32,
           rightCornerRadius: 32,
           onTap: (index) => setState(() => _bottomNavIndex = index),
-          activeColor: Colors.orange.shade600,
+          activeColor: const Color.fromARGB(224, 255, 59, 24),
       ),
     );
   }
