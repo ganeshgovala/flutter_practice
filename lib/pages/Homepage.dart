@@ -16,7 +16,8 @@ class HomePage extends StatefulWidget {
   }
 
   Future<DocumentSnapshot> getDate(String id) async {
-    DocumentSnapshot data = await FirebaseFirestore.instance.collection('tasks').doc(id).get();
+    DocumentSnapshot data =
+        await FirebaseFirestore.instance.collection('tasks').doc(id).get();
     return data;
   }
 
@@ -34,92 +35,136 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("To-do List", style: TextStyle(
-              color: Colors.black,
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-            ),),
+            Text(
+              "To-do List",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 26,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             SizedBox(height: 5),
-            Text("Today", style: TextStyle(
-              color: const Color.fromARGB(255, 72, 72, 72),
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),),
+            Text(
+              "Today",
+              style: TextStyle(
+                color: const Color.fromARGB(255, 72, 72, 72),
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             SizedBox(height: 10),
             Expanded(
-              child: StreamBuilder(
-                stream: widget.getTasks(), 
-                builder: (context, snapshot) {
-                  if(snapshot.hasError) {
-                    showDialog(
-                      context: context, 
-                      builder: (context) => AlertDialog(
-                        title: Text(snapshot.error.toString()),
-                      )
-                    );
-                  }
+                child: StreamBuilder(
+                    stream: widget.getTasks(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text(snapshot.error.toString()),
+                                ));
+                      }
 
-                  if(snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator(
-                      color: const Color.fromARGB(224, 255, 59, 24),  
-                    ));
-                  }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                          color: const Color.fromARGB(224, 255, 59, 24),
+                        ));
+                      }
 
-                  final data = snapshot.requireData;
+                      final data = snapshot.requireData;
 
-                  if(data.size == 0) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('lib/images/NoTask.png', height: 250,),
-                          SizedBox(height: 20),
-                          Text("No tasks to show", style: TextStyle(
-                            color: Colors.grey.shade500,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          )),
-                        ],
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: data.size,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: const Color.fromARGB(223, 255, 229, 224),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(
-                              name : data.docs[index]['taskName'].toString(),
-                              id : data.docs[index].id,  
-                            )));
-                          },
-                          child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                            title: Text(data.docs[index]['taskName'].toString()[0].toUpperCase() + data.docs[index]['taskName'].toString().substring(1, data.docs[index]['taskName'].toString().length),
+                      if (data.size == 0) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'lib/images/NoTask.png',
+                                height: 250,
+                              ),
+                              Text("No tasks to show",
+                                  style: TextStyle(
+                                    color:
+                                        const Color.fromARGB(255, 84, 84, 84),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  )),
+                            ],
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                          itemCount: data.size,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Text(
+                                //   data.docs[index]['time'] == null
+                                //       ? "-"
+                                //       : data.docs[index]['time'].toString(),
+                                //   style: TextStyle(
+                                //     color:
+                                //         const Color.fromARGB(255, 56, 56, 56),
+                                //     fontSize: 14,
+                                //     fontWeight: FontWeight.w500,
+                                //   ),
+                                // ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => TaskPage(
+                                                    name: data.docs[index]
+                                                            ['taskName']
+                                                        .toString(),
+                                                    id: data.docs[index].id,
+                                                  )));
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 10),
+                                      title: Text(
+                                        data.docs[index]['taskName']
+                                                .toString()[0]
+                                                .toUpperCase() +
+                                            data.docs[index]['taskName']
+                                                .toString()
+                                                .substring(
+                                                    1,
+                                                    data.docs[index]['taskName']
+                                                        .toString()
+                                                        .length),
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
-                                        ),),
-                            trailing: IconButton(
-                              onPressed: () {
-                                Datamodel().deleteTask(data.docs[index].id);
-                              }, 
-                              icon: Icon(Icons.delete_outlined)
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                  );
-                }
-              )
-            )
+                                        ),
+                                      ),
+                                      leading: Container(
+                                        height: 20,
+                                        width: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      trailing: IconButton(
+                                          onPressed: () {
+                                            Datamodel().deleteTask(
+                                                data.docs[index].id);
+                                          },
+                                          icon: Icon(Icons.delete_outlined)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          });
+                    }))
           ],
         ),
       ),

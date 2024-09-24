@@ -140,7 +140,7 @@ class _TaskPageState extends State<TaskPage> {
           future: getData(widget.id), 
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
-              return Text("...");
+              return TaskPageSlide(icon: Icon(Icons.alarm, size: 18), title: "Time", containerText: "Loading..");
             }
 
             if(snapshot.hasError) {
