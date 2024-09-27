@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_practice/Models/DataModel.dart';
 import 'package:flutter_practice/components/TaskPageSlide.dart';
+import 'package:intl/intl.dart';
 
 class TaskPage extends StatefulWidget {
   final String name;
@@ -148,13 +149,19 @@ class _TaskPageState extends State<TaskPage> {
             }
             final data = snapshot.data;
             if(data != null && data.get('time') != null) {
-              return TaskPageSlide(icon: Icon(Icons.alarm, size: 18), title: "Time", containerText: data.get('time').toString(),);
+              return Column(
+                children: [
+                  TaskPageSlide(icon: Icon(Icons.alarm, size: 18), title: "Time", containerText: data.get('time').toString(),),
+                  Divider(),
+                  TaskPageSlide(icon: Icon(Icons.calendar_month_outlined, size: 18), title: "Date", 
+                    containerText:  data.get('date'),
+                  ),
+                ],
+              );
             }
             return TaskPageSlide(icon: Icon(Icons.alarm, size: 18), title: "Time", containerText: "--/--/--");
           }
         ),
-        // Divider(),
-        // TaskPageSlide(icon: Icon(Icons.alarm_outlined, size: 18), title: "Time & Reminder", containerText: "No",),
         // Divider(),
         // TaskPageSlide(containerText: "No", title: "Repeat Task", icon: Icon(Icons.repeat_outlined, size: 18)),
         // Divider(),

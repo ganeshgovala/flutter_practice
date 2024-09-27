@@ -248,7 +248,8 @@ class _BottomNavState extends State<BottomNav> {
                               widget._taskController.text,
                               widget._descController.text,
                               _selectedTime!.format(context).toString(),
-                              _selectedDate);
+                              _selectedDate!.year.toString() +"-"+ _selectedDate!.month.toString() +"-"+ _selectedDate!.day.toString()
+                            );
                           print("pressed");
                           Navigator.pop(context);
                         },
