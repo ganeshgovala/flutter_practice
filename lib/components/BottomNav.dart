@@ -108,7 +108,7 @@ class _BottomNavState extends State<BottomNav> {
                           EdgeInsets.symmetric(vertical: 14, horizontal: 10),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       width: MediaQuery.of(context).size.width,
                       child: TextField(
