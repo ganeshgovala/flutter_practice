@@ -40,7 +40,7 @@ class _BottomNavState extends State<BottomNav> {
     DateTime? picked = await showDatePicker(
       context: context,
       firstDate: DateTime.now(),
-      lastDate: DateTime(2050),
+      lastDate: DateTime(2010),
     );
 
     if (picked != null && picked != _selectedDate) {
