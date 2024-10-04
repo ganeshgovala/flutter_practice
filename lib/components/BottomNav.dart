@@ -91,7 +91,7 @@ class _BottomNavState extends State<BottomNav> {
                             fontSize: 28,
                           )),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
 
                     // TASK NAME
 
